@@ -1,5 +1,6 @@
-import java.util.*;
+package nhcollection.util;
 
+import java.util.*;
 
 public class Node {
 
@@ -8,12 +9,16 @@ public class Node {
 	protected Map<Object, int[]> keyMap;
 	private NonHeapMap masterMap;
 	private Iterator cursorIte = null;
+	private int NODE_TYPE = 0;
 
 	public Node(int nodeType, NonHeapMap masterMap) {
 		this.masterMap = masterMap;
+
 		if (nodeType == 1) {
-			keyMap = new HashMap();
+			NODE_TYPE = 1;
+			keyMap = new HashMap(128);
 		} else if (nodeType == 2) {
+			NODE_TYPE = 2;
 			keyMap = new TreeMap();
 		}
 	}
@@ -37,7 +42,7 @@ public class Node {
 			Object value = getData(key);
 			Object[] result = new Object[2];
 			result[0] = key;
-			result[1] = result;
+			result[1] = value;
 			return result;
 		} else {
 			cursorIte = null;
@@ -70,7 +75,7 @@ public class Node {
 			masterMap. decrementAndGet();
 			return parentNode.removeData(key);
 		}
-		
+
 		return null;
 	}
 

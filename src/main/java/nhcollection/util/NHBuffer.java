@@ -1,3 +1,5 @@
+package nhcollection.util;
+
 import java.nio.*;
 import java.lang.reflect.*;
 

@@ -1,3 +1,5 @@
+package nhcollection.util;
+
 import java.nio.*;
 
 public class ParentNode {
@@ -43,7 +45,7 @@ public class ParentNode {
 				} else {
 					writeData = new byte[defaultBuf.chunkSize];
 				}
-				// 
+				//
 				System.arraycopy(data, (writeIdx * defaultBuf.chunkSize), writeData, 0, writeData.length);
 				int[] writeResult = defaultBuf.writeData(writeData);
 
@@ -67,7 +69,7 @@ public class ParentNode {
 		byte[] allReadData = null;
 
 		// 読み取りが複数Chunkの可能性があるのでまず読み取り総データを求める
-		// 
+		//
 		//
 		for (int loop = 0; loop < loopCount; loop++) {
 			totalReadSize = totalReadSize + point[loop *2 + 1];
