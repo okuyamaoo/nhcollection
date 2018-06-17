@@ -45,7 +45,7 @@ public class AppTest
         }
         // GET
         for (int i = 0; i < 100000; i++) {
-          String testVal = nonHeapMap.get(key + i);
+          String testVal = (String)nonHeapMap.get(key + i);
           if (testVal == null || !testVal.equals(val + i)) result = false;
         }
         // REMOVE
@@ -55,7 +55,7 @@ public class AppTest
         }
         // REMOVE -> GET
         for (int i = 0; i < 50000; i++) {
-          String testVal = nonHeapMap.get(key + i);
+          String testVal = (String)nonHeapMap.get(key + i);
           if (testVal != null) result = false;;
         }
         val = "valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue";
@@ -66,7 +66,7 @@ public class AppTest
         }
         // GET
         for (int i = 0; i < 50000; i++) {
-          String testVal = nonHeapMap.get(key + i);
+          String testVal = (String)nonHeapMap.get(key + i);
           if (testVal == null || !testVal.equals(val+val + i)) result = false;
         }
         // SIZE
@@ -75,7 +75,7 @@ public class AppTest
 
         //　カーソル
         nonHeapMap.resetCursor();
-        for (Object[] obj = nonHeapMap.next(); obj != null; obj = nonHeapMap.next()) {
+        for (Object[] obj = (Object[])nonHeapMap.next(); obj != null; obj = (Object[])nonHeapMap.next()) {
           //System.out.println("key=" + obj[0]); // key
           //System.out.println("value=" + obj[1].toString()); // value
         }

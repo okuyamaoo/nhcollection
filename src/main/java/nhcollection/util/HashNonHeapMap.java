@@ -58,46 +58,43 @@ public class HashNonHeapMap implements NonHeapMap {
 			return returnObj;
 		}
 
-		public void put(String key, String value) {
-			String str = (String)key.toString();
+		public void put(Object key, String value) {
+			String str = key.toString();
 			int hashIndex = createHashIndex(str);
-			byte[] dataBytes = str.getBytes();
 
 			synchronized(memoryLock[hashIndex]) {
 
 				//データを登録
 				if (nodeList[hashIndex] != null) {
-					nodeList[hashIndex].putData(str, value);
+					nodeList[hashIndex].putData(key, value);
 				} else {
 					Node node = new Node(NODE_TYPE, this);
 					node.setParentNode(new ParentNode());
-					node.putData(str, value);
+					node.putData(key, value);
 					nodeList[hashIndex] = node;
 				}
 			}
 		}
 
-		public String get(String key) {
-			String str = (String)key.toString();
+		public String get(Object key) {
+			String str = key.toString();
 			int hashIndex = createHashIndex(str);
-			byte[] dataBytes = str.getBytes();
 
 			synchronized(memoryLock[hashIndex]) {
 				if (nodeList[hashIndex] != null) {
-					return (String)nodeList[hashIndex].getData(str);
+					return (String)nodeList[hashIndex].getData(key);
 				}
 			}
 			return null;
 		}
 
-		public String remove(String key) {
-			String str = (String)key.toString();
+		public String remove(Object key) {
+			String str = key.toString();
 			int hashIndex = createHashIndex(str);
-			byte[] dataBytes = str.getBytes();
 
 			synchronized(memoryLock[hashIndex]) {
 				if (nodeList[hashIndex] != null) {
-					return (String)nodeList[hashIndex].removeData(str);
+					return (String)nodeList[hashIndex].removeData(key);
 				}
 			}
 			return null;
