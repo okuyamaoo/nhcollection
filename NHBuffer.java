@@ -1,7 +1,7 @@
 import java.nio.*;
 import java.lang.reflect.*;
 
-public class NHBuffer { 
+public class NHBuffer {
 
 	// Heap外メモリ
 	// メモリ上に128バイトで1データとした領域を使いそこにデータを格納する
@@ -96,7 +96,7 @@ public class NHBuffer {
 			for ( ; i < removeAddrList.length; i++) {
 				newRemoveAddrList[i] = removeAddrList[i];
 			}
-			for ( ; i < removeAddrList.length; i++) {
+			for ( ; i < newRemoveAddrList.length; i++) {
 				newRemoveAddrList[i] = -1;
 			}
 
