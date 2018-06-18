@@ -1,5 +1,6 @@
 package nhcollection;
 
+import java.util.*;
 import nhcollection.util.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -35,9 +36,19 @@ public class AppTest
     public void testApp()
     {
         boolean result = true;
+        //long start = System.nanoTime();
+
         HashNonHeapMap nonHeapMap = new HashNonHeapMap();
+        //Map nonHeapMap = new HashMap(828);
         String key = "key";
-        String val = "Avaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue";
+        String val = "AvaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalueX";
+        /*for (int i = 0; i < 1000000; i++) {
+          nonHeapMap.put(key + i, val + i);
+          if ((i % 20000) == 0) System.out.println(i);
+        }
+        long end = System.nanoTime();
+        System.out.println(((end - start) / 1000 /1000) + "ms");
+        System.exit(1);*/
         // PUT
         for (int i = 0; i < 100000; i++) {
           nonHeapMap.put(key + i, val + i);
@@ -58,7 +69,7 @@ public class AppTest
           String testVal = (String)nonHeapMap.get(key + i);
           if (testVal != null) result = false;;
         }
-        val = "valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue";
+        val = "valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue";
         // Larget String PUT
         for (int i = 0; i < 50000; i++) {
           nonHeapMap.put(key + i, val+val+ i);

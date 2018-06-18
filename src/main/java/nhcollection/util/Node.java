@@ -51,29 +51,35 @@ public class Node {
 	}
 
 	//仮にObjectはStringとする
-	public void putData(Object obj, Object value) {
+	public void putData(Object obj, String value) {
 		int[] exsistData = keyMap.get(obj);
 		if (exsistData != null) removeData(obj);
 
 		masterMap.incrementAndGet();
-		keyMap.put(obj, parentNode.writeData(((String)value).getBytes()));
+		keyMap.put(obj, parentNode.writeData(value.getBytes()));
 	}
 
 
 
-	public Object getData(Object obj) {
+	public String getData(Object obj) {
 		int[] key = keyMap.get(obj);
-		if (key != null) return parentNode.readData(key);
+		byte[] nodeResult = null;
+		if (key != null) {
+			nodeResult = parentNode.readData(key);
+			if (nodeResult == null) return null;
+			return new String(nodeResult);
+		}
 		return null;
 	}
 
 	// 登録されたkeyを探しデータを削除する
-	public Object removeData(Object obj) {
+	public String removeData(Object obj) {
 
 		int[] key = keyMap.remove(obj);
 		if (key != null) {
 			masterMap. decrementAndGet();
-			return parentNode.removeData(key);
+			Object removeResult = parentNode.removeData(key);
+			return null;
 		}
 
 		return null;

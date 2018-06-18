@@ -7,9 +7,9 @@ public class ParentNode {
 	private NHBuffer defaultBuf = null;
 	//private NHBuffer largeBuf nul;
 
-	public ParentNode(){
+	public ParentNode(int settingChunkSize, int settingNumberOfChunk, int settingRebuildExpansionFactor){
 
-		defaultBuf = new NHBuffer();
+		defaultBuf = new NHBuffer(settingChunkSize, settingNumberOfChunk, settingRebuildExpansionFactor);
 	}
 
 	//データをBufferへ書き込む
@@ -62,7 +62,7 @@ public class ParentNode {
 	}
 
 
-	protected Object readData(int[] point) {
+	protected byte[] readData(int[] point) {
 
 		int loopCount = point.length / 2;
 		int totalReadSize = 0;
@@ -93,7 +93,7 @@ public class ParentNode {
 			}
 		}
 
-		return new String(allReadData);
+		return allReadData;
 	}
 
 	protected Object removeData(int[] point) {
