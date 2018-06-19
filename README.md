@@ -37,8 +37,12 @@ for (Object[] obj = nonHeapMap.next(); obj != null; obj = nonHeapMap.next()) {
   //System.out.println("value=" + obj[1].toString()); // value
 }
 
+// HashMapを保存し取り出して表示
 Map tmpMap = new HashMap();
 tmpMap.put("key", "value");
+
 nonHeapMap.put("key4", tmpMap);
-System.out.println(nonHeapMap.get("key"));
+Map getResult = (Map)nonHeapMap.get("key4");
+
+System.out.println(getResult);
 ```
