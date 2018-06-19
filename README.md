@@ -37,4 +37,8 @@ for (Object[] obj = nonHeapMap.next(); obj != null; obj = nonHeapMap.next()) {
   //System.out.println("value=" + obj[1].toString()); // value
 }
 
+Map tmpMap = new HashMap();
+tmpMap.put("key", "value");
+nonHeapMap.put("key4", tmpMap);
+System.out.println(nonHeapMap.get("key"));
 ```
