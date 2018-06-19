@@ -35,10 +35,16 @@ public class AppTest
      */
     public void testApp()
     {
+      try {
         boolean result = true;
         //long start = System.nanoTime();
 
         HashNonHeapMap nonHeapMap = new HashNonHeapMap();
+        Map tmpMap = new HashMap();
+        tmpMap.put("aaaaa", "bbbbb");
+        tmpMap.put("ccccc", "ddddd");
+        nonHeapMap.put("key1", tmpMap);
+        System.out.println(nonHeapMap.get("key1"));
         //Map nonHeapMap = new HashMap(828);
         String key = "key";
         String val = "AvaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalueX";
@@ -80,6 +86,10 @@ public class AppTest
           String testVal = (String)nonHeapMap.get(key + i);
           if (testVal == null || !testVal.equals(val+val + i)) result = false;
         }
+        // containsKey
+        for (int i = 0; i < 100000; i++) {
+          if(!nonHeapMap.containsKey(key + i)) result = false;
+        }
         // SIZE
         System.out.println("size() = [" + nonHeapMap.size() + "]");
         if (nonHeapMap.size() != 100000L)  result = false;
@@ -92,5 +102,8 @@ public class AppTest
         }
 
         assertTrue( result );
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
     }
 }
