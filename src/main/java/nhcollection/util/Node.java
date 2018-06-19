@@ -1,6 +1,7 @@
 package nhcollection.util;
 
 import java.util.*;
+import java.io.*;
 
 public class Node {
 
@@ -35,7 +36,7 @@ public class Node {
 		cursorIte = null;
 	}
 
-	public Object[] next() {
+	public Object[] next()  throws IOException, ClassNotFoundException {
 		if (cursorIte == null) cursorIte = keyMap.keySet().iterator();
 		if(cursorIte.hasNext()) {
 			Object key = cursorIte.next();
@@ -51,23 +52,22 @@ public class Node {
 	}
 
 	//仮にObjectはStringとする
-	public void putData(Object obj, String value) {
+	public void putData(Object obj, Object value) throws IOException {
 		int[] exsistData = keyMap.get(obj);
+		byte[] data = serialize(value);
 		if (exsistData != null) removeData(obj);
 
 		masterMap.incrementAndGet();
-		keyMap.put(obj, parentNode.writeData(value.getBytes()));
+		keyMap.put(obj, parentNode.writeData(data));
 	}
 
-
-
-	public String getData(Object obj) {
+	public Object getData(Object obj) throws IOException, ClassNotFoundException {
 		int[] key = keyMap.get(obj);
 		byte[] nodeResult = null;
 		if (key != null) {
 			nodeResult = parentNode.readData(key);
 			if (nodeResult == null) return null;
-			return new String(nodeResult);
+			return deserialize(nodeResult);
 		}
 		return null;
 	}
@@ -85,7 +85,104 @@ public class Node {
 		return null;
 	}
 
+	public boolean hasData(Object obj) {
+		int[] key = keyMap.get(obj);
+		if (key != null) return true;
+		return false;
+	}
+
 	public int size() {
 		return keyMap.size();
+	}
+
+	private byte[] serialize(Object obj) throws IOException {
+		byte type = 0;
+		byte[] result = null;
+		byte[] dataBytes = null;
+		if (obj instanceof String) {
+			type = 1;
+		} else if (obj instanceof Integer) {
+			type = 2;
+		} else if (obj instanceof Long) {
+			type = 3;
+		} else if (obj instanceof Double) {
+			type = 4;
+		} else if (obj instanceof Short) {
+			type = 5;
+		} else if (obj instanceof Float) {
+			type = 6;
+		} else if (obj instanceof Boolean) {
+			type = 7;
+		} else if (obj instanceof Character) {
+			type = 8;
+		} else if (obj instanceof Byte) {
+			type = 9;
+		} else {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(obj);
+			dataBytes = baos.toByteArray();
+		}
+
+		if (type > 0 &&  type < 10) {
+			dataBytes = obj.toString().getBytes();
+		}
+
+		result = new byte[1 + dataBytes.length];
+		result[0] = type;
+		System.arraycopy(dataBytes, 0, result, 1, dataBytes.length);
+
+		return result;
+	}
+
+	private Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+		Object result = null;
+		byte[] resultBytes = null;
+		if (data[0] == 0) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new ObjectInputStream(new ByteArrayInputStream(resultBytes)).readObject();
+		} else if (data[0] == 1) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new String(resultBytes);
+		} else if (data[0] == 2) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Integer(new String(resultBytes));
+		} else if (data[0] == 3) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Long(new String(resultBytes));
+		} else if (data[0] == 4) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Double(new String(resultBytes));
+		} else if (data[0] == 5) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Short(new String(resultBytes));
+		} else if (data[0] == 6) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Float(new String(resultBytes));
+		} else if (data[0] == 7) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Boolean(new String(resultBytes));
+		} else if (data[0] == 8) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Character((new String(resultBytes)).charAt(0));
+		} else if (data[0] == 9) {
+			resultBytes = new byte[data.length - 1];
+			System.arraycopy(data, 1, resultBytes, 0, resultBytes.length);
+			result = new Byte(new String(resultBytes));
+		}
+
+
+
+
+		return result;
 	}
 }
