@@ -10,6 +10,7 @@ public class Node {
 	protected Map<Object, int[]> keyMap;
 	private NonHeapMap masterMap;
 	private Iterator cursorIte = null;
+	private boolean cursorDescOrder = false;
 	private int NODE_TYPE = 0;
 
 	public Node(int nodeType, NonHeapMap masterMap) {
@@ -33,11 +34,39 @@ public class Node {
 	}
 
 	public void resetCursor() {
+		cursorDescOrder = false;
 		cursorIte = null;
 	}
 
+	public void resetCursor(boolean descOrder) {
+		if (descOrder) {
+			cursorDescOrder = true;
+		} else{
+			cursorDescOrder = false;
+		}
+		cursorIte = null;
+	}
+
+
+	private void coursourNext() {
+		if (cursorIte == null) {
+			if (!cursorDescOrder) {
+				cursorIte = keyMap.keySet().iterator();
+			} else {
+				if (NODE_TYPE == 2) {
+					// TreeMap指定で降順指定の場合は降順のKeySetからIteratorを取り出す
+					cursorIte = ((TreeMap)keyMap).descendingKeySet().iterator();
+				} else {
+					// 通常のHashMapの場合は降順のKeySetは無効
+					cursorIte = keyMap.keySet().iterator();
+				}
+			}
+		}
+	}
+
 	public Object[] next()  throws IOException, ClassNotFoundException {
-		if (cursorIte == null) cursorIte = keyMap.keySet().iterator();
+		coursourNext(); // カーソルを進める
+
 		if(cursorIte.hasNext()) {
 			Object key = cursorIte.next();
 			Object value = getData(key);
@@ -45,6 +74,18 @@ public class Node {
 			result[0] = key;
 			result[1] = value;
 			return result;
+		} else {
+			cursorIte = null;
+			return null;
+		}
+	}
+
+	public Object nextKey() {
+		coursourNext(); // カーソルを進める
+
+		if(cursorIte.hasNext()) {
+			Object key = cursorIte.next();
+			return key;
 		} else {
 			cursorIte = null;
 			return null;
