@@ -112,6 +112,7 @@ public class AppTest
         }
         if (hashMapCount != 100000) result = false;
 
+
         // TreeMapのテスト
         TreeNonHeapMap treeNonHeapMap = new TreeNonHeapMap();
 
