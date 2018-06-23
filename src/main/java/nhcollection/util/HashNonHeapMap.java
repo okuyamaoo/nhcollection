@@ -24,18 +24,18 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class HashNonHeapMap implements NonHeapMap {
 
-	private AtomicLong totalSize = new AtomicLong(0L);
+	protected AtomicLong totalSize = new AtomicLong(0L);
 
-	static int NODE_TYPE = 1;
+	protected static int NODE_TYPE = 1;
 	protected int parallelFactor = 256;
-	Node[] nodeList = new Node[parallelFactor];
+	protected Node[] nodeList = new Node[parallelFactor];
 
-	private int settingChunkSize = 	256;
-	private int settingNumberOfChunk = 4096;
-	private int settingRebuildExpansionFactor = settingNumberOfChunk;
+	protected int settingChunkSize = 	256;
+	protected int settingNumberOfChunk = 4096;
+	protected int settingRebuildExpansionFactor = settingNumberOfChunk;
 
-	private int cursorIndex = -1;
-	private Node cursorNode = null;
+	protected int cursorIndex = -1;
+	protected Node cursorNode = null;
 
 	protected Integer[] memoryLock = new Integer[parallelFactor];
 
@@ -119,6 +119,7 @@ public class HashNonHeapMap implements NonHeapMap {
 			if (cursorNode != null) cursorNode.resetCursor();
 			return next();
 		}
+
 		Object[] returnObj = null;
 		synchronized(memoryLock[cursorIndex]) {
 			returnObj = cursorNode.next();
@@ -228,6 +229,15 @@ public class HashNonHeapMap implements NonHeapMap {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 全ての要素を削除する.<br>
+	 */
+	public void clear() {
+		nodeList = null;
+		totalSize = new AtomicLong(0L);
+		nodeList = new Node[parallelFactor];
 	}
 
 	private int createHashIndex(Object obj) {
